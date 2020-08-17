@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: static-consumer
+spec:
+    containers:
+    - name: java-consumer
+      image: r0486682/java-consumer:latest
+      ports:
+      - containerPort: 6379

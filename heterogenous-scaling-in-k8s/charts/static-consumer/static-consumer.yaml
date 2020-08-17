@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-consumer
+  namespace: scaler
+spec:
+    containers:
+    - name: consumer
+      image: r0486682/java-consumer
+      imagePullPolicy: Always
+      resources:
+        requests:
+          cpu: 360m
+        limits:
+          cpu: 360m
+      env:
+      - name: DNS_NAMESPACE
+        value: "scaler"
+      - name: STRESS_SIZE
+        value: "100"
+      - name: POOL_SIZE
+        value: "10"        
+   

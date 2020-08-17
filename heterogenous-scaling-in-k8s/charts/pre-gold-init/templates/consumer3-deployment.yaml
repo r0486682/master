@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+namespace: {{.Values.namespace}}
+metadata:
+  name: preconsumer
+  namespace: {{.Values.namespace}}
+spec:
+  replicas: 8
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      nodeSelector:
+        workerNode: "yes"
+      volumes:
+      - name: sharedlibrary
+        emptyDir: {}
+      containers:
+      - name: consumer
+        image: karlherler/pause
+        volumeMounts:
+        - mountPath: /sharedlibrary
+          name: sharedlibrary
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: {{.Values.worker3CPU}}
+          limits:
+            cpu: {{.Values.worker3CPU}}          
+      priorityClassName: {{.Values.priorityClass}}
+      initContainers:
+      - name: sharedlibrary
+        image: r0486682/pause
+        command: [cp, -a, /app/lib/., /sharedlibrary]
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /sharedlibrary
+            name: sharedlibrary
